@@ -51,6 +51,7 @@ Proxy.prototype.clientData = function OnServerData(data) {
 
 	try {
 		this._tcp.write(data);
+			
 	}
 	catch(e) {
 
@@ -63,13 +64,23 @@ Proxy.prototype.clientData = function OnServerData(data) {
  * Server -> Client
  */
 Proxy.prototype.serverData = function OnClientData(data) {
-	this._ws.send(data, function(error){
-		/*
-		if (error !== null) {
-			OnClose();
-		}
-		*/
-	});
+	
+	if (this._ws.protocol == 'binary')
+		this._ws.send(data, function(error){
+			/*
+			if (error !== null) {
+				OnClose();
+			}
+			*/
+		});
+	else
+		this._ws.send(data.toString('base64'), function(error){
+			/*
+			if (error !== null) {
+				OnClose();
+			}
+			*/
+		});
 }
 
 
