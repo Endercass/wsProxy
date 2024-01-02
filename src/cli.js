@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 
-// Import library
-import optimist from "optimist";
-const { argv: args } = optimist;
+// Imports
+import yargs from "yargs/yargs";
+import { hideBin } from "yargs/helpers";
+
 import main from "./core/index.js";
 import modules from "./core/modules.js";
-// import allowed from "./modules/allow/config.js";
+import allowed from "./modules/allow/config.js";
+
+const args = yargs(hideBin(process.argv)).argv;
 
 // Arguments
 if (args.h || args.help) {
