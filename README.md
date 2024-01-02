@@ -1,8 +1,6 @@
 wsProxy
 =======
-[![Build Status](https://travis-ci.org/herenow/wsProxy.svg?branch=master)](https://travis-ci.org/herenow/wsProxy)
-
-This is a websocket to tcp proxy, written in node.js. It is dynamic and will proxy to various tcp servers.
+This is a websocket to tcp proxy, written in node.js. It is adapted from the original roBrowser project, and is designed to be fully compatible with the original wsProxy. However, this version is heavily modified and does not have any of the original maintainers. It is also a goal to make this version more lightweight and efficient than the original, as javascript has come a long way in the last decade.
 
 
 Installation
@@ -10,7 +8,6 @@ Installation
 ```
 npm install wsproxy -g
 ```
-
 
 Usage
 ----------
@@ -43,8 +40,7 @@ ws://websocket.example.com:5999/127.0.0.1:6900
 ```
 * You can edit allowed.js to only allow proxy to certain IP:PORT
 	* Note: if you pass in the `-a` or `--allow` option when starting the `wsproxy` this file will be ignored.
-* We will soon release a version, with better standards for this.
-
+* You can also use the `wsproxy` as a library, and use it in your own node.js application.
 
 Writing modules for wsProxy guidelines
 ------------
@@ -56,11 +52,16 @@ Writing modules for wsProxy guidelines
 
 Authors
 ---------
-This was created for and by the roBrowser project.
+This was adapted from and originally designed for the roBrowser project.
 - [vthibault](https://github.com/vthibault)
 - [herenow](https://github.com/herenow)
+
+This version is heavily modified and maintained by:
+- [Endercass](https://github.com/Endercass)
 
 
 Thank you
 ----------
+- roBrowser team for the original code
+- Mercury Workshop for the base64 patch
 - Einaros/ws for providing the websocket middleware
