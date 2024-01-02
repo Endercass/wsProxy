@@ -7,7 +7,7 @@ export default function Init(config) {
   /**
    * Invoke workers
    */
-  if (cluster.isMaster) {
+  if (cluster.isPrimary) {
     for (var i = 0; i < config.workers; i++) {
       forkWorker(config);
     }

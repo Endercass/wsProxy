@@ -3,12 +3,16 @@
 // Imports
 import yargs from "yargs/yargs";
 import { hideBin } from "yargs/helpers";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
 
 import main from "./core/index.js";
-import modules from "./core/modules.js";
+import ModuleLoader from "./core/modules.js";
 import allowed from "./modules/allow/config.js";
 
 const args = yargs(hideBin(process.argv)).argv;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Arguments
 if (args.h || args.help) {
@@ -27,8 +31,10 @@ if (args.h || args.help) {
   process.exit(0);
 }
 
+let loader = new ModuleLoader(`${__dirname}/modules`);
+
 // Load modules
-modules.load("allow");
+loader.load("allow");
 
 // Parse allowed ip:port option into array
 // Overrides the default allowed.js file
@@ -44,4 +50,5 @@ main({
   ssl: args.ssl || args.s || false,
   key: args.key || args.k || "./default.key",
   cert: args.cert || args.c || "./default.crt",
+  modules: loader,
 });

@@ -4,24 +4,71 @@ import { WebSocket } from "ws";
 import { IncomingMessage } from "http";
 
 /**
+ * The configuration for the proxy
+ * @typedef {Object} ProxyConfig
+ * @property {boolean} failOnError - Whether to close the connection on errors.
+ */
+
+/**
  * This class will handle the proxying of tcp over websockets for a given connection
  */
-class Proxy {
+class SocketProxy {
   ws;
   tcp;
   from;
   to;
 
+  config;
   /**
    * Constructor for Proxy
    *
    * @param {WebSocket} ws
    * @param {IncomingMessage} req
+   * @param {ProxyConfig} config
    */
-  constructor(ws, req) {
+  constructor(ws, req, config) {
     this.ws = ws;
+    this.config = config;
+
     this.from = req.socket.remoteAddress;
     this.to = req.url.substring(1);
+
+    /**
+     * Special config display mode
+     * This will display the config to the client, without
+     * proxying anything. It can be accessed by using the
+     * destination "!cfg" (e.g. ws://localhost:5999/!cfg)
+     * The reason that the exclamation mark is used is to
+     * prevent any conflicts domain names.
+     */
+    if (this.to === "!cfg") {
+      let safeConfig = {
+        port: config.port,
+        ssl_enabled: config.ssl,
+        modules: {},
+      };
+
+      // Only show the presence of ssl keys if ssl is enabled
+      // Even if ssl is enabled, don't show the keys themselves
+      if (config.ssl) {
+        safeConfig.ssl_key = "[hidden]";
+        safeConfig.ssl_cert = "[hidden]";
+      }
+
+      // Populate the config display with the modules that are enabled
+      Object.keys(this.config.modules.configs).forEach((module_name) => {
+        let module = this.config.modules.configs[module_name];
+        if (!module.hide) {
+          safeConfig.modules[module_name] = module.config;
+        }
+      });
+
+      this.ws.on("message", () => {
+        this.ws.send(JSON.stringify(safeConfig));
+      });
+
+      return; // Don't do anything else, we're just displaying the config
+    }
 
     // Bind data
     this.ws.on("message", this.clientData.bind(this));
@@ -93,8 +140,9 @@ class Proxy {
       });
   }
   /**
-   * OnClose
-   * Clean up events/sockets
+   * This function is called when the connection is closed.
+   * It will close the tcp and websocket connections, and
+   * clean up the listeners.
    */
   close() {
     if (this.tcp) {
@@ -116,7 +164,7 @@ class Proxy {
     }
   }
   /**
-   * On server accepts connection
+   * This function is called when the connection to the server is accepted.
    */
   connectAccept() {
     status("Connection accepted from '%s'.", this.to);
@@ -124,6 +172,6 @@ class Proxy {
 }
 
 /**
- * Exports
+ * Export SocketProxy
  */
-export default Proxy;
+export default SocketProxy;

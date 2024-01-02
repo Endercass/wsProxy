@@ -5,7 +5,7 @@ import { createServer } from "http";
 import { createServer as _createServer } from "https";
 import { readFileSync } from "fs";
 import { WebSocketServer } from "ws";
-import modules from "./modules.js";
+import Modules from "./modules.js";
 import { status } from "./message.js";
 
 /**
@@ -16,7 +16,27 @@ import Proxy from "./proxy.js";
 /**
  * Initiate a server
  */
-var Server = function Init(config) {
+function Server(config) {
+  /**
+   * Before estabilishing a connection
+   */
+  function onRequestConnect(info, callback) {
+    // Once we get a response from our modules, pass it through
+    config.modules.verify(info, function (res) {
+      callback(res);
+    });
+  }
+
+  /**
+   * Connection passed through verify, lets initiate a proxy
+   */
+  function onConnection(ws, req) {
+    config.modules.connect(ws, function (res) {
+      //All modules have processed the connection, lets start the proxy
+      new Proxy(ws, req, config);
+    });
+  }
+
   var opts = {
     clientTracking: false,
     verifyClient: onRequestConnect,
@@ -53,26 +73,6 @@ var Server = function Init(config) {
   server.on("connection", onConnection);
 
   return this;
-};
-
-/**
- * Before estabilishing a connection
- */
-function onRequestConnect(info, callback) {
-  // Once we get a response from our modules, pass it through
-  modules.method.verify(info, function (res) {
-    callback(res);
-  });
-}
-
-/**
- * Connection passed through verify, lets initiate a proxy
- */
-function onConnection(ws, req) {
-  modules.method.connect(ws, function (res) {
-    //All modules have processed the connection, lets start the proxy
-    new Proxy(ws, req);
-  });
 }
 
 /**
