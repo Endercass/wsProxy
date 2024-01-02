@@ -4,8 +4,7 @@
 import { createServer } from "http";
 import { createServer as _createServer } from "https";
 import { readFileSync } from "fs";
-import ws from "ws";
-const _Server = ws.Server;
+import { WebSocketServer } from "ws";
 import modules from "./modules.js";
 import { status } from "./message.js";
 
@@ -49,9 +48,9 @@ var Server = function Init(config) {
     status("Starting wsProxy on port %s...", config.port);
   }
 
-  var WebSocketServer = new _Server(opts);
+  var server = new WebSocketServer(opts);
 
-  WebSocketServer.on("connection", onConnection);
+  server.on("connection", onConnection);
 
   return this;
 };
@@ -69,10 +68,10 @@ function onRequestConnect(info, callback) {
 /**
  * Connection passed through verify, lets initiate a proxy
  */
-function onConnection(ws) {
+function onConnection(ws, req) {
   modules.method.connect(ws, function (res) {
     //All modules have processed the connection, lets start the proxy
-    new Proxy(ws);
+    new Proxy(ws, req);
   });
 }
 
