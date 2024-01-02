@@ -1,8 +1,8 @@
 /**
  * Dependencies
  */
-import { createServer } from "http";
-import { createServer as _createServer } from "https";
+import { createServer as createHttpServer } from "http";
+import { createServer as createHttpsServer } from "https";
 import { readFileSync } from "fs";
 import { WebSocketServer } from "ws";
 import Modules from "./modules.js";
@@ -13,16 +13,23 @@ import { status } from "./message.js";
  */
 import Proxy from "./proxy.js";
 
-/**
- * Initiate a server
- */
-function Server(config) {
+class Server {
+  config;
+
+  /**
+   * Constructor for Server
+   * @param {Object} config
+   */
+  constructor(config) {
+    this.config = config;
+  }
+
   /**
    * Before estabilishing a connection
    */
-  function onRequestConnect(info, callback) {
+  onRequestConnect(info, callback) {
     // Once we get a response from our modules, pass it through
-    config.modules.verify(info, function (res) {
+    this.config.modules.verify(info, (res) => {
       callback(res);
     });
   }
@@ -30,49 +37,48 @@ function Server(config) {
   /**
    * Connection passed through verify, lets initiate a proxy
    */
-  function onConnection(ws, req) {
-    config.modules.connect(ws, function (res) {
+  onConnection(ws, req) {
+    this.config.modules.connect(ws, (res) => {
       //All modules have processed the connection, lets start the proxy
-      new Proxy(ws, req, config);
+      new Proxy(ws, req, this.config);
     });
   }
 
-  var opts = {
-    clientTracking: false,
-    verifyClient: onRequestConnect,
-  };
+  /**
+   * Start the server
+   */
+  listen() {
+    let opts = {
+      clientTracking: false,
+      verifyClient: this.onRequestConnect.bind(this),
+    };
 
-  if (config.ssl) {
-    opts.server = _createServer(
-      {
-        key: readFileSync(config.key),
-        cert: readFileSync(config.cert),
-      },
-      function (req, res) {
+    if (this.config.ssl) {
+      opts.server = createHttpsServer(
+        {
+          key: readFileSync(this.config.key),
+          cert: readFileSync(this.config.cert),
+        },
+        function (req, res) {
+          res.writeHead(200);
+          res.end("Secure wsProxy running...\n");
+        }
+      );
+    } else {
+      opts.server = createHttpServer(function (req, res) {
         res.writeHead(200);
-        res.end("Secure wsProxy running...\n");
-      }
-    );
+        res.end("wsProxy running...\n");
+      });
+    }
 
-    opts.server.listen(config.port);
+    opts.server.listen(this.config.port);
 
-    status("Starting a secure wsProxy on port %s...", config.port);
-  } else {
-    opts.server = createServer(function (req, res) {
-      res.writeHead(200);
-      res.end("wsProxy running...\n");
-    });
+    status("Starting wsProxy on port %s...", this.config.port);
 
-    opts.server.listen(config.port);
+    const wss = new WebSocketServer(opts);
 
-    status("Starting wsProxy on port %s...", config.port);
+    wss.on("connection", this.onConnection.bind(this));
   }
-
-  var server = new WebSocketServer(opts);
-
-  server.on("connection", onConnection);
-
-  return this;
 }
 
 /**

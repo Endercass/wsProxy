@@ -6,9 +6,8 @@ import { hideBin } from "yargs/helpers";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
-import main from "./core/index.js";
+import Server from "./core/server.js";
 import ModuleLoader from "./core/modules.js";
-import allowed from "./modules/allow/config.js";
 
 const args = yargs(hideBin(process.argv)).argv;
 const __filename = fileURLToPath(import.meta.url);
@@ -21,9 +20,6 @@ if (args.h || args.help) {
   console.log("-p, --port port to run wsProxy on. [Default: 5999]");
   console.log(
     "-a, --allow list of allowed ip:port to proxy to (comma separated) [Default: none] [Example: 127.0.0.1:6900,127.0.0.1:5121,127.0.0.1:6121]"
-  );
-  console.log(
-    '-t, --threads number of "threads" to spawn, set it to the number of cpu\'s you have. [Default: 1]'
   );
   console.log("-s, --ssl enable ssl.");
   console.log("-k, --key path to ssl key file. [Default: ./default.key]");
@@ -44,11 +40,13 @@ if (args.a || args.allow) {
 }
 
 // Init
-main({
+let config = {
   port: args.port || args.p || process.env.PORT || 5999,
-  workers: args.threads || args.t || 1,
   ssl: args.ssl || args.s || false,
   key: args.key || args.k || "./default.key",
   cert: args.cert || args.c || "./default.crt",
   modules: loader,
-});
+};
+
+let server = new Server(config);
+server.listen();
