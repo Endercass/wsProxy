@@ -2,9 +2,9 @@
 
 // Import library
 var args = require("optimist").argv;
-var main = require("./src/main");
-var modules = require("./src/modules");
-var allowed = require("./allowed");
+var main = require("./core");
+var modules = require("./core/modules");
+var allowed = require("./modules/allow/config");
 
 // Arguments
 if (args.h || args.help) {

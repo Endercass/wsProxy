@@ -21,7 +21,7 @@ var Main = (module.exports = function Init(config) {
   /**
    * Server constructor
    */
-  var Server = require("./server");
+  var Server = require("./server.js");
 
   var server = new Server(config);
 

@@ -10,9 +10,9 @@
   "bugs": {
     "url": "https://github.com/herenow/wsProxy/issues"
   },
-  "main": "index.js",
+  "main": "./src/core/main.js",
   "bin": {
-    "wsproxy": "./index.js"
+    "wsproxy": "./src/cli.js"
   },
   "dependencies": {
     "optimist": "0.6.0",
@@ -23,7 +23,7 @@
   },
   "scripts": {
     "test": "mocha",
-    "start": "node index.js"
+    "start": "node ./src/cli.js"
   },
   "engines": {
     "node": ">=0.6"

@@ -1,8 +1,8 @@
 // Logs
-var mes = require("../../message");
+var mes = require("../../core/message");
 
 // Allowed IP:HOST to proxy to.
-var allowed_ip = require("../../../allowed");
+var allowed_ip = require("./config");
 
 // This method will check if this websocket can proxy to this server
 // next(boolean) will expect a true or false

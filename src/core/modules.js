@@ -16,7 +16,7 @@ Modules.stack = {
  * Register new module
  */
 Modules.load = function registerModule(folder) {
-  var module = require("./modules/" + folder);
+  var module = require("../modules/" + folder);
 
   for (var method in this.stack) {
     if (typeof module[method] === "function") {
