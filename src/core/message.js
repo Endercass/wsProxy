@@ -1,54 +1,48 @@
 /**
  * Dependencies
  */
-var util = require("util");
-var format = util.format;
-
-/**
- * Exports
- */
-var Mes = (module.exports = {});
+import { format } from "util";
 
 /**
  * Info
  */
-Mes.info = function Info() {
-  var mes = format.apply(null, this.wrap(arguments));
+export function info() {
+  var mes = format.apply(null, wrap(arguments));
 
   console.log("\x1b[1;37m[%s]:\x1b[0m %s", "Info", mes);
-};
+}
 
 /**
  * Status
  */
-Mes.status = function Status() {
-  var mes = format.apply(null, this.wrap(arguments));
+export function status() {
+  var mes = format.apply(null, wrap(arguments));
 
   console.log("\x1b[1;32m[%s]:\x1b[0m %s", "Status", mes);
-};
+}
 
 /**
  * Error
  */
-Mes.error = function Error() {
-  var mes = format.apply(null, this.wrap(arguments));
+export function error() {
+  var mes = format.apply(null, wrap(arguments));
 
   console.log("\x1b[1;31m[%s]:\x1b[0m %s", "Error", mes);
-};
+}
 
 /**
  * Warning
  */
-Mes.warn = function Warning() {
-  var mes = format.apply(null, this.wrap(arguments));
+export function warning() {
+  var mes = format.apply(null, wrap(arguments));
 
   console.log("\x1b[1;33m[%s]:\x1b[0m %s", "Warn", mes);
-};
+}
 
 /**
  * Wrap arguments in a cool white color :)
  */
-Mes.wrap = function Wrap() {
+export function wrap() {
   var args = [];
 
   args.push(arguments[0][0]);
@@ -58,4 +52,4 @@ Mes.wrap = function Wrap() {
   }
 
   return args;
-};
+}

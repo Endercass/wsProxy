@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
 // Import library
-var args = require("optimist").argv;
-var main = require("./core");
-var modules = require("./core/modules");
-var allowed = require("./modules/allow/config");
+import optimist from "optimist";
+const { argv: args } = optimist;
+import main from "./core/index.js";
+import modules from "./core/modules.js";
+// import allowed from "./modules/allow/config.js";
 
 // Arguments
 if (args.h || args.help) {

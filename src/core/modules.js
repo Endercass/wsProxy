@@ -16,13 +16,13 @@ Modules.stack = {
  * Register new module
  */
 Modules.load = function registerModule(folder) {
-  var module = require("../modules/" + folder);
-
-  for (var method in this.stack) {
-    if (typeof module[method] === "function") {
-      this.stack[method].push(module[method]);
+  import("../modules/" + folder + "/index.js").then((module) => {
+    for (var method in this.stack) {
+      if (typeof module[method] === "function") {
+        this.stack[method].push(module[method]);
+      }
     }
-  }
+  });
 };
 
 /**
@@ -98,4 +98,4 @@ Modules.method.connect = function Connect(ws, callback) {
 /**
  * Exports
  */
-module.exports = Modules;
+export default Modules;

@@ -1,17 +1,18 @@
 /**
  * Dependencies
  */
-var http = require("http");
-var https = require("https");
-var fs = require("fs");
-var ws = require("ws");
-var modules = require("./modules");
-var mes = require("./message");
+import { createServer } from "http";
+import { createServer as _createServer } from "https";
+import { readFileSync } from "fs";
+import ws from "ws";
+const _Server = ws.Server;
+import modules from "./modules.js";
+import { status } from "./message.js";
 
 /**
  * Proxy constructor
  */
-var Proxy = require("./proxy");
+import Proxy from "./proxy.js";
 
 /**
  * Initiate a server
@@ -23,10 +24,10 @@ var Server = function Init(config) {
   };
 
   if (config.ssl) {
-    opts.server = https.createServer(
+    opts.server = _createServer(
       {
-        key: fs.readFileSync(config.key),
-        cert: fs.readFileSync(config.cert),
+        key: readFileSync(config.key),
+        cert: readFileSync(config.cert),
       },
       function (req, res) {
         res.writeHead(200);
@@ -36,19 +37,19 @@ var Server = function Init(config) {
 
     opts.server.listen(config.port);
 
-    mes.status("Starting a secure wsProxy on port %s...", config.port);
+    status("Starting a secure wsProxy on port %s...", config.port);
   } else {
-    opts.server = http.createServer(function (req, res) {
+    opts.server = createServer(function (req, res) {
       res.writeHead(200);
       res.end("wsProxy running...\n");
     });
 
     opts.server.listen(config.port);
 
-    mes.status("Starting wsProxy on port %s...", config.port);
+    status("Starting wsProxy on port %s...", config.port);
   }
 
-  var WebSocketServer = new ws.Server(opts);
+  var WebSocketServer = new _Server(opts);
 
   WebSocketServer.on("connection", onConnection);
 
@@ -78,4 +79,4 @@ function onConnection(ws) {
 /**
  * Exports
  */
-module.exports = Server;
+export default Server;

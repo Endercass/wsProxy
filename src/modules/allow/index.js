@@ -1,8 +1,8 @@
 // Logs
-var mes = require("../../core/message");
+import { info as _info } from "../../core/message.js";
 
 // Allowed IP:HOST to proxy to.
-var allowed_ip = require("./config");
+import allowed_ip from "./config.js";
 
 // This method will check if this websocket can proxy to this server
 // next(boolean) will expect a true or false
@@ -15,7 +15,7 @@ function checkAllowed(info, next) {
 
   // Reject
   if (allowed_ip.length && allowed_ip.indexOf(target) < 0) {
-    mes.info("Reject requested connection from '%s' to '%s'.", from, target);
+    _info("Reject requested connection from '%s' to '%s'.", from, target);
     next(false);
   }
 
@@ -23,6 +23,4 @@ function checkAllowed(info, next) {
 }
 
 // Exports methods
-module.exports = {
-  verify: checkAllowed, //module.verify method
-};
+export const verify = checkAllowed;

@@ -1,12 +1,9 @@
+import cluster from "cluster";
+import Server from "./server.js";
 /**
  * Module
  */
-var Main = (module.exports = function Init(config) {
-  /**
-   * Dependencies
-   */
-  var cluster = require("cluster");
-
+export default function Init(config) {
   /**
    * Invoke workers
    */
@@ -21,7 +18,6 @@ var Main = (module.exports = function Init(config) {
   /**
    * Server constructor
    */
-  var Server = require("./server.js");
 
   var server = new Server(config);
 
@@ -33,4 +29,4 @@ var Main = (module.exports = function Init(config) {
       isWorker: true,
     });
   }
-});
+}
