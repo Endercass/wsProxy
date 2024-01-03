@@ -10,7 +10,7 @@
   "bugs": {
     "url": "https://github.com/Endercass/wsProxy/issues"
   },
-  "main": "./src/core/main.js",
+  "main": "./src/index.js",
   "bin": {
     "wsproxy": "./src/cli.js"
   },
