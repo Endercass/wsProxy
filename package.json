@@ -1,7 +1,7 @@
 {
   "name": "wsproxy-ng",
   "description": "A websocket to tcp proxy, written in node.js, rewritten for performance and readability.",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "author": "Endercass",
   "repository": {
     "type": "git",

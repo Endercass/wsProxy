@@ -51,22 +51,26 @@ class Server {
       verifyClient: this.onRequestConnect.bind(this),
     };
 
-    if (this.config.ssl) {
-      opts.server = createHttpsServer(
-        {
-          key: readFileSync(this.config.key),
-          cert: readFileSync(this.config.cert),
-        },
-        function (req, res) {
-          res.writeHead(200);
-          res.end("Secure wsProxy running...\n");
-        }
-      );
+    if (this.config.server) {
+      opts.server = this.config.server;
     } else {
-      opts.server = createHttpServer(function (req, res) {
-        res.writeHead(200);
-        res.end("wsProxy running...\n");
-      });
+      if (this.config.ssl) {
+        opts.server = createHttpsServer(
+          {
+            key: readFileSync(this.config.key),
+            cert: readFileSync(this.config.cert),
+          },
+          function (req, res) {
+            res.writeHead(200);
+            res.end("Secure wsProxy running...\n");
+          }
+        );
+      } else {
+        opts.server = createHttpServer(function (req, res) {
+          res.writeHead(200);
+          res.end("wsProxy running...\n");
+        });
+      }
     }
 
     opts.server.listen(this.config.port);
