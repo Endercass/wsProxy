@@ -19,7 +19,7 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "mocha": "1.18.x"
+    "mocha": "^10.2.0"
   },
   "scripts": {
     "test": "mocha",
