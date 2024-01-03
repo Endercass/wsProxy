@@ -2,11 +2,14 @@
  * Dependencies
  */
 import { format } from "util";
+import Logger from "./core/logger.js";
+
+export default new Logger(info, status, error, warning);
 
 /**
  * Info
  */
-export function info() {
+function info() {
   var mes = format.apply(null, wrap(arguments));
 
   console.log("\x1b[1;37m[%s]:\x1b[0m %s", "Info", mes);
@@ -15,7 +18,7 @@ export function info() {
 /**
  * Status
  */
-export function status() {
+function status() {
   var mes = format.apply(null, wrap(arguments));
 
   console.log("\x1b[1;32m[%s]:\x1b[0m %s", "Status", mes);
@@ -24,7 +27,7 @@ export function status() {
 /**
  * Error
  */
-export function error() {
+function error() {
   var mes = format.apply(null, wrap(arguments));
 
   console.log("\x1b[1;31m[%s]:\x1b[0m %s", "Error", mes);
@@ -33,7 +36,7 @@ export function error() {
 /**
  * Warning
  */
-export function warning() {
+function warning() {
   var mes = format.apply(null, wrap(arguments));
 
   console.log("\x1b[1;33m[%s]:\x1b[0m %s", "Warn", mes);
@@ -42,7 +45,7 @@ export function warning() {
 /**
  * Wrap arguments in a cool white color :)
  */
-export function wrap() {
+function wrap() {
   var args = [];
 
   args.push(arguments[0][0]);

@@ -5,6 +5,7 @@ import yargs from "yargs/yargs";
 import { hideBin } from "yargs/helpers";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+import logger from "./cli_logger.js";
 
 import Server from "./core/server.js";
 import ModuleLoader from "./core/modules.js";
@@ -45,6 +46,7 @@ let config = {
   ssl: args.ssl || args.s || false,
   key: args.key || args.k || "./default.key",
   cert: args.cert || args.c || "./default.crt",
+  logger,
   modules: loader,
 };
 

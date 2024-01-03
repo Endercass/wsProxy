@@ -5,8 +5,6 @@ import { createServer as createHttpServer } from "http";
 import { createServer as createHttpsServer } from "https";
 import { readFileSync } from "fs";
 import { WebSocketServer } from "ws";
-import Modules from "./modules.js";
-import { status } from "./message.js";
 
 /**
  * Proxy constructor
@@ -29,7 +27,7 @@ class Server {
    */
   onRequestConnect(info, callback) {
     // Once we get a response from our modules, pass it through
-    this.config.modules.verify(info, (res) => {
+    this.config.modules.verify(this.config.logger, info, (res) => {
       callback(res);
     });
   }
@@ -38,7 +36,7 @@ class Server {
    * Connection passed through verify, lets initiate a proxy
    */
   onConnection(ws, req) {
-    this.config.modules.connect(ws, (res) => {
+    this.config.modules.connect(this.config.logger, ws, (res) => {
       //All modules have processed the connection, lets start the proxy
       new Proxy(ws, req, this.config);
     });
@@ -73,7 +71,10 @@ class Server {
 
     opts.server.listen(this.config.port);
 
-    status("Starting wsProxy on port %s...", this.config.port);
+    this.config.logger.status(
+      "Starting wsProxy on port %s...",
+      this.config.port
+    );
 
     const wss = new WebSocketServer(opts);
 

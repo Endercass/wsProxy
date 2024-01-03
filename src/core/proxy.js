@@ -1,5 +1,4 @@
 import { connect } from "net";
-import { info, status } from "./message.js";
 import { WebSocket } from "ws";
 import { IncomingMessage } from "http";
 
@@ -79,7 +78,7 @@ class SocketProxy {
     var args = this.to.split(":");
 
     // Connect to server
-    info(
+    this.config.logger.info(
       "Requested connection from '%s' to '%s' [ACCEPTED].",
       this.from,
       this.to
@@ -146,7 +145,7 @@ class SocketProxy {
    */
   close() {
     if (this.tcp) {
-      info("Connection closed from '%s'.", this.to);
+      this.config.logger.info("Connection closed from '%s'.", this.to);
 
       this.tcp.removeListener("close", this.close.bind(this));
       this.tcp.removeListener("error", this.close.bind(this));
@@ -155,7 +154,7 @@ class SocketProxy {
     }
 
     if (this.ws) {
-      info("Connection closed from '%s'.", this.from);
+      this.config.logger.info("Connection closed from '%s'.", this.from);
 
       this.ws.removeListener("close", this.close.bind(this));
       this.ws.removeListener("error", this.close.bind(this));
@@ -167,7 +166,7 @@ class SocketProxy {
    * This function is called when the connection to the server is accepted.
    */
   connectAccept() {
-    status("Connection accepted from '%s'.", this.to);
+    this.config.logger.status("Connection accepted from '%s'.", this.to);
   }
 }
 

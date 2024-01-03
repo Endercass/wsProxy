@@ -28,9 +28,9 @@ class ModuleLoader {
    * at which point it will stop and return false. If all modules return true,
    * then the connection will be accepted.
    */
-  verify(info, callback) {
+  verify(logger, info, callback) {
     const fnc = (i) => {
-      this.runModule("verify", i, [info], (bool) => {
+      this.runModule("verify", i, [logger, info], (bool) => {
         // Check if it returned false, stop here if it did
         if (bool === false) {
           callback(false);
@@ -50,9 +50,9 @@ class ModuleLoader {
   /**
    * This method allows modules to do additional processing on the websocket connection
    */
-  connect(ws, callback) {
+  connect(logger, ws, callback) {
     const fnc = (i) => {
-      this.runModule("connect", i, [ws], () => {
+      this.runModule("connect", i, [logger, ws], () => {
         // Finished stack, lets return
         if (i >= this.stack["connect"].length) {
           callback();
