@@ -2,6 +2,9 @@ wsProxy
 =======
 This is a websocket to tcp proxy, written in node.js. It is adapted from the original roBrowser project, and is designed to be fully compatible with the original wsProxy. However, this version is heavily modified and does not have any of the original maintainers. It is also a goal to make this version more lightweight and efficient than the original, as javascript has come a long way in the last decade.
 
+> [!CAUTION]  
+> This repository is now archives as of April 26th, 2024. It is advised to use [wisp-server-node](https://github.com/MercuryWorkshop/wisp-server-node/tree/main) or any other project that implements the [wisp protocol](https://github.com/MercuryWorkshop/wisp-protocol?tab=readme-ov-file). The Wisp protocol is much more mature and most implementations have backwards-compatibility for wsProxy. This repository will stay here as a reference for future implementers of the wsProxy protocol, as the code is much more readable than the original.
+
 
 Installation
 ----------
